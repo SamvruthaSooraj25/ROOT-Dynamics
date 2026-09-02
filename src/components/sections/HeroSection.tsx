@@ -8,65 +8,120 @@ import rootOffLogo from "@/assets/root-off-logo.png";
 
 export function HeroSection() {
   const root = useRef<HTMLElement>(null);
-  const [now, setNow] = useState(() => new Date());
+  const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 1000);
+    setNow(new Date());
+  
+    const id = setInterval(() => {
+      setNow(new Date());
+    }, 1000);
+  
     return () => clearInterval(id);
   }, []);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-
+  
     const ctx = gsap.context(() => {
       const mobile = window.innerWidth < 768;
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root.current,
           start: "top top",
-          end: "+=380%",
+          end: "+=285%",
           scrub: 1,
           pin: ".hero-stage",
           anticipatePin: 1,
         },
       });
-
-      // 0 - 20%: quiet
-      tl.to(".hero-meta", { opacity: 0.35, duration: 0.2 }, 0);
-
-      // 20 - 50%: ROOT scales beyond the viewport
+  
+      // time slowly fade with word
+      tl.to(".hero-meta", { opacity: 0.55, duration: 0.13 }, 0);
+  
+      // ROOT scales beyond the viewport and the image slowly reduces opacity
       tl.to(
         ".hero-word",
-        { scale: mobile ? 2.6 : 4.5, ease: "none", duration: 0.3 },
-        0.2,
+        { scale: mobile ? 1.9 : 4.5, ease: "none", duration: 0.23 },
+        0,
       );
-      tl.to(".hero-sub", { opacity: 0, y: -40, duration: 0.2 }, 0.2);
-      tl.to(".hero-image", { opacity: 1, scale: 1, duration: 0.35 }, 0.25);
-
-      // 50 - 70%: letters separate, image reveals through the type
-      tl.to(".hero-image", { scale: 1.08, duration: 0.4 }, 0.5);
-
-      // 70 - 90%: type retreats, statement clip reveal
-      tl.to(".hero-word", { scale: mobile ? 1.6 : 2.2, opacity: 0.18, duration: 0.2 }, 0.7);
+      tl.to(".hero-sub", { opacity: 0, y: -40, duration: 0.19 }, 0.06);
+      tl.to(".hero-image", { opacity: 1, scale: 1, duration: 0.26 }, 0.06);
+  
+      // letters separate, image reveals through the type
+      tl.to(".hero-image", { scale: 1.25, duration: 0.26 }, 0.32);
+  
+      // type retreats, statement clip reveal
+      tl.to(
+        ".hero-word",
+        { scale: mobile ? 1.6 : 2.2, opacity: 0.70, duration: 0.23 },
+        0.26,
+      );
+  
       tl.fromTo(
         ".hero-statement",
         { clipPath: "inset(0 100% 0 0)", opacity: 1 },
-        { clipPath: "inset(0 0% 0 0)", duration: 0.2 },
-        0.72,
+        { clipPath: "inset(0 0% 0 0)", duration: 0.26 },
+        0.32,
       );
-      tl.fromTo(".hero-cta", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.1 }, 0.82);
-      tl.fromTo(".hero-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.15 }, 0.74);
-
+  
+      tl.fromTo(
+        ".hero-cta",
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 0.13 },
+        0.38,
+      );
+  
+      tl.fromTo(
+        ".hero-rule",
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.19 },
+        0.32,
+      );
+  
+      tl.to(".hero-image", { scale: 1.15, duration: 0.13 }, 0.58);
+  
+      tl.to(
+        ".hero-statement",
+        {
+          clipPath: "inset(0 100% 0 0)",
+          opacity: 1,
+          duration: 0.22,
+        },
+        0.74,
+      );
+  
+      tl.to(
+        ".hero-cta",
+        { opacity: 0, y: -24, duration: 0.19 },
+        0.81,
+      );
+  
+      tl.to(
+        ".hero-rule",
+        { scaleX: 0, duration: 0.26 },
+        0.70,
+      );
+  
       // 90 - 100%: everything lifts away into the next chapter
-      tl.to(".hero-layer", { yPercent: -22, opacity: 0, duration: 0.1 }, 0.9);
-      tl.to(".hero-image", { yPercent: -12, filter: "brightness(0.25)", duration: 0.1 }, 0.9);
+      tl.to(
+        ".hero-layer",
+        { yPercent: -22, opacity: 0, duration: 0.26 },
+        0.70,
+      );
+  
+      tl.to(
+        ".hero-image",
+        { yPercent: -12, opacity: 0.3, duration: 0.23 },
+        0.70,
+      );
     }, root);
-
+  
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={root} id="hero" className="relative h-[480vh]">
+    <section ref={root} id="hero" className="relative">
       <div className="hero-stage relative h-screen w-full overflow-hidden bg-background">
         <img
           src={heroBg}
@@ -81,13 +136,15 @@ export function HeroSection() {
         <div className="hero-layer relative z-10 flex h-full flex-col justify-between px-5 py-24 md:px-10 md:py-28">
           <div className="hero-meta flex justify-end pt-6">
             <span className="text-right font-mono text-[0.62rem] uppercase tracking-[0.4em] text-muted-foreground">
-              {now.toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              })}
+            {now
+              ? now.toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })
+              : ""}
               <br />
-              {now.toLocaleTimeString("en-GB", { hour12: false })}
+            {now ? now.toLocaleTimeString("en-GB", { hour12: false }) : ""}
             </span>
           </div>
 
@@ -104,12 +161,25 @@ export function HeroSection() {
           </div>
 
           <div className="flex flex-col gap-6">
-            <span className="hero-rule block h-px w-full origin-left bg-[color-mix(in_oklab,var(--primary)_70%,transparent)]" />
+            <span className="hero-rule block h-px w-full origin-left bg-[color-mix(in_oklab,var(--primary)_70%,transparent)]"
+              style={{
+                transform: "scaleX(0)",
+              }}
+            />
             <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-              <h2 className="hero-statement font-display text-[9vw] font-semibold leading-[0.9] tracking-[-0.03em] text-foreground md:text-[5.2vw]">
+              <h2 className="hero-statement font-display text-[9vw] font-semibold leading-[0.9] tracking-[-0.03em] text-foreground"
+                style={{
+                  clipPath: "inset(0 100% 0 0)",
+                }}
+              >
                 Access the unknown.
               </h2>
-              <div className="hero-cta">
+              <div className="hero-cta"
+                  style={{
+                    opacity: 0,
+                    transform: "translateY(24px)",
+                  }}
+                >
                 <PrimaryButton label="Join Us" onClick={() => scrollToSection("join")} />
               </div>
             </div>
