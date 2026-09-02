@@ -8,7 +8,6 @@ export function VisionMissionSection() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({

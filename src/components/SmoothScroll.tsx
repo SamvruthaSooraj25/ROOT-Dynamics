@@ -7,9 +7,6 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
-
     const lenis = new Lenis({
       duration: 1.15,
       smoothWheel: true,

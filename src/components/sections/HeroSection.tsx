@@ -17,7 +17,6 @@ export function HeroSection() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
       const mobile = window.innerWidth < 768;
@@ -45,8 +44,6 @@ export function HeroSection() {
       tl.to(".hero-image", { opacity: 1, scale: 1, duration: 0.35 }, 0.25);
 
       // 50 - 70%: letters separate, image reveals through the type
-      tl.to(".hero-letter-1", { xPercent: -18, duration: 0.2 }, 0.5);
-      tl.to(".hero-letter-4", { xPercent: 18, duration: 0.2 }, 0.5);
       tl.to(".hero-image", { scale: 1.08, duration: 0.4 }, 0.5);
 
       // 70 - 90%: type retreats, statement clip reveal
