@@ -8,14 +8,13 @@ export function VisionMissionSection() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root.current,
           start: "top top",
-          end: "+=320%",
+          end: "+=450%",
           scrub: 1,
           pin: ".vm-stage",
           anticipatePin: 1,
@@ -25,27 +24,32 @@ export function VisionMissionSection() {
       tl.fromTo(".vm-vision-word", { xPercent: 12, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 0.15 }, 0);
       tl.fromTo(".vm-vision-body", { yPercent: 30, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.15 }, 0.05);
 
-      tl.fromTo(".vm-line", { scaleY: 0 }, { scaleY: 1, ease: "none", duration: 0.5 }, 0.2);
 
-      tl.to(".vm-vision-word", { xPercent: -85, duration: 0.3, ease: "none" }, 0.32);
-      tl.to(".vm-vision-body", { yPercent: -120, opacity: 0, duration: 0.25 }, 0.34);
+      tl.fromTo(".vm-line", { scaleY: 0 }, { scaleY: 1, ease: "none", duration: 0.7 }, 0.2);
+
+
+      tl.to(".vm-vision-word", { xPercent: -85, duration: 0.25, ease: "none" }, 0.35);
+      tl.to(".vm-vision-body", { yPercent: -120, opacity: 0, duration: 0.25 }, 0.35);
       tl.to(".vm-vision", { clipPath: "inset(0 0 100% 0)", duration: 0.15 }, 0.5);
 
       tl.fromTo(
         ".vm-mission-word",
         { xPercent: 110, opacity: 0 },
         { xPercent: 0, opacity: 1, duration: 0.25, ease: "none" },
-        0.52,
+        0.55,
       );
       tl.fromTo(
         ".vm-mission-body",
         { clipPath: "inset(0 0 100% 0)", yPercent: 18 },
         { clipPath: "inset(0 0 0% 0)", yPercent: 0, duration: 0.2 },
-        0.65,
+        0.55,
       );
-      tl.fromTo(".vm-mission-item", { opacity: 0, x: 40 }, { opacity: 1, x: 0, stagger: 0.05, duration: 0.2 }, 0.7);
+      
+      // Items finish expanding fully at 0.70 + 0.20 = 0.90
+      tl.fromTo(".vm-mission-item", { opacity: 0, x: 40 }, { opacity: 1, x: 0, stagger: 0.05, duration: 0.2 }, 0.6);
 
-      tl.to(".vm-stage-inner", { yPercent: -18, opacity: 0, duration: 0.12 }, 0.9);
+   
+      tl.to(".vm-stage-inner", { yPercent: -18, opacity: 0, duration: 0.15 }, 1.30);
     }, root);
 
     return () => ctx.revert();

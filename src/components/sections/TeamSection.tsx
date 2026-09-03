@@ -43,7 +43,6 @@ export function TeamSection() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
       const track = root.current!.querySelector<HTMLElement>(".team-track")!;
