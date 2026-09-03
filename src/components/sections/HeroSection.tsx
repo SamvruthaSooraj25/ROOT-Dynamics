@@ -42,7 +42,7 @@ export function HeroSection() {
       // ROOT scales beyond the viewport and the image slowly reduces opacity
       tl.to(
         ".hero-word",
-        { scale: mobile ? 1.9 : 4.5, ease: "none", duration: 0.23 },
+        { scale: mobile ? 1.9 : 2.2, ease: "none", duration: 0.23 },
         0,
       );
       tl.to(".hero-sub", { opacity: 0, y: -40, duration: 0.19 }, 0.06);
@@ -54,7 +54,7 @@ export function HeroSection() {
       // type retreats, statement clip reveal
       tl.to(
         ".hero-word",
-        { scale: mobile ? 1.6 : 2.2, opacity: 0.70, duration: 0.23 },
+        { scale: mobile ? 1.6 : 1.9, opacity: 0.70, duration: 0.23 },
         0.26,
       );
   
