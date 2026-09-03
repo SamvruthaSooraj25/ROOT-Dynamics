@@ -12,5 +12,9 @@ export default defineConfig({
         preset: "vercel",
       }),
     ],
+    server: {
+      port: 8080, 
+      allowedHosts: true, 
+    }
   },
 });
