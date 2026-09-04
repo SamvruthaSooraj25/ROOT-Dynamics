@@ -34,8 +34,10 @@ export function EventsSection() {
           end: () => `+=${distance() + window.innerHeight}`,
           scrub: 1,
           pin: ".ev-stage",
-          invalidateOnRefresh: true,
+          pinType: "fixed",
+          pinSpacing: true,
           anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
       });
 
@@ -58,22 +60,36 @@ export function EventsSection() {
         },
       );
 
-      gsap.fromTo(
-        ".ev-title",
-        { xPercent: 8 },
-        { xPercent: -8, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom bottom", scrub: 1 } },
-      );
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 768px)", () => {
+        gsap.fromTo(
+          ".ev-title",
+          { xPercent: 8 },
+          { xPercent: -8, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom bottom", scrub: 1 } },
+        );
+      });
+
+      const refresh = () => ScrollTrigger.refresh();
+      window.addEventListener("load", refresh);
+      if ((document as any).fonts?.ready) {
+        (document as any).fonts.ready.then(refresh);
+      }
+
+      return () => {
+        window.removeEventListener("load", refresh);
+        mm.revert();
+      };
     }, root);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={root} id="events" className="relative h-[440vh] bg-[var(--surface)]">
-      <div className="ev-stage relative h-screen w-full overflow-hidden">
-        <div className="absolute inset-x-0 top-0 z-20 flex items-center justify-between px-5 pt-28 md:px-10">
+    <section ref={root} id="events" className="relative bg-[var(--surface)]">
+      <div className="ev-stage relative h-screen w-full overflow-hidden bg-[var(--surface)]">
+        <div className="absolute inset-x-0 top-0 z-20 flex flex-col gap-2 px-5 pt-24 sm:flex-row sm:items-center sm:justify-between sm:pt-28 md:px-10">
           <SectionIndicator index="05 / 07" label="Events" />
-          <h2 className="ev-title font-display text-sm font-semibold uppercase tracking-[0.4em] text-foreground md:text-lg">
+          <h2 className="ev-title whitespace-nowrap font-display text-xs font-semibold uppercase tracking-[0.25em] text-foreground sm:text-sm md:text-lg md:tracking-[0.4em]">
             ROOT in action
           </h2>
         </div>
@@ -91,9 +107,9 @@ export function EventsSection() {
                   className="ev-img size-full object-cover opacity-80"
                   style={{ willChange: "transform" }}
                 />
-                <span className="absolute left-4 top-4 font-mono text-[0.62rem] tracking-[0.3em] text-foreground">
+                {/* <span className="absolute left-4 top-4 font-mono text-[0.62rem] tracking-[0.3em] text-foreground">
                   EVENT {String(i + 1).padStart(2, "0")}
-                </span>
+                </span> */}
               </div>
               <div className="ev-meta mt-6">
                 <div className="flex flex-wrap items-center gap-4 font-mono text-[0.62rem] uppercase tracking-[0.3em] text-muted-foreground">
@@ -112,6 +128,7 @@ export function EventsSection() {
               </div>
             </article>
           ))}
+          <div aria-hidden className="ev-spacer h-full w-[20vw] shrink-0 md:w-[14vw]" />
         </div>
 
         <div className="absolute inset-x-5 bottom-8 z-20 h-px bg-[color-mix(in_oklab,var(--foreground)_12%,transparent)] md:inset-x-10">
