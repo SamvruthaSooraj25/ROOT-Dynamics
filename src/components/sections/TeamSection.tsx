@@ -43,25 +43,33 @@ export function TeamSection() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-
+  
     const ctx = gsap.context(() => {
       const track = root.current!.querySelector<HTMLElement>(".team-track")!;
       const distance = () => track.scrollWidth - window.innerWidth;
-
+  
+      const PAUSE = () => window.innerHeight * 0.6;
+  
+      ScrollTrigger.create({
+        trigger: root.current,
+        start: "top top",
+        end: () => `+=${distance() + PAUSE()}`,
+        pin: ".team-stage",
+        invalidateOnRefresh: true,
+        anticipatePin: 1,
+      });
       const move = gsap.to(track, {
         x: () => -distance(),
         ease: "none",
         scrollTrigger: {
           trigger: root.current,
           start: "top top",
-          end: () => `+=${distance() + window.innerHeight}`,
+          end: () => `+=${distance()}`,
           scrub: 1,
-          pin: ".team-stage",
           invalidateOnRefresh: true,
-          anticipatePin: 1,
         },
       });
-
+  
       gsap.utils.toArray<HTMLElement>(".team-card").forEach((card) => {
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -77,24 +85,30 @@ export function TeamSection() {
         tl.fromTo(
           card.querySelectorAll(".team-meta > *"),
           { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, stagger: 0.05, duration: 0.35 },
-          0.15,
+          { opacity: 1, y: 0, stagger: 0.05, duration: 0.3 },
+          0.0,
         );
-        tl.fromTo(card.querySelector(".team-rule"), { scaleX: 0 }, { scaleX: 1, duration: 0.3 }, 0.25);
+        tl.fromTo(card.querySelector(".team-rule"), { scaleX: 0 }, { scaleX: 1, duration: 0.2 }, 0.25);
       });
-
+  
       gsap.to(".team-title", {
         xPercent: -30,
         ease: "none",
-        scrollTrigger: { trigger: root.current, start: "top top", end: "bottom bottom", scrub: 1 },
+        scrollTrigger: {
+          trigger: root.current,
+          start: "top top",
+          end: () => `+=${distance() + PAUSE()}`,
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
       });
     }, root);
-
+  
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={root} id="team" className="relative h-[420vh] bg-[var(--surface)]">
+    <section ref={root} id="team" className="relative bg-[var(--surface)]">
       <div className="team-stage relative h-screen w-full overflow-hidden">
         <div className="absolute inset-x-0 top-0 z-20 flex items-start justify-between px-5 pt-28 md:px-10">
           <SectionIndicator index="03 / 07" label="The People" />

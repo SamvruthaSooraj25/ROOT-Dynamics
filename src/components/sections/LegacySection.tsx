@@ -33,8 +33,10 @@ export function LegacySection() {
           end: () => `+=${distance() + window.innerHeight}`,
           scrub: 1,
           pin: ".legacy-stage",
-          invalidateOnRefresh: true,
+          pinType: "fixed",        
+          pinSpacing: true,
           anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
       });
 
@@ -73,14 +75,24 @@ export function LegacySection() {
           },
         },
       );
+      const refresh = () => ScrollTrigger.refresh();
+      window.addEventListener("load", refresh);
+
+      if ((document as any).fonts?.ready) {
+        (document as any).fonts.ready.then(refresh);
+      }
+
+      return () => {
+        window.removeEventListener("load", refresh);
+      };
     }, root);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={root} id="legacy" className="relative h-[460vh] bg-background">
-      <div className="legacy-stage relative h-screen w-full overflow-hidden">
+    <section ref={root} id="legacy" className="relative bg-background">
+      <div className="legacy-stage relative h-screen w-full overflow-hidden bg-background">
         <div className="absolute inset-x-0 top-0 z-20 flex items-center justify-between px-5 pt-28 md:px-10">
           <SectionIndicator index="04 / 07" label="Legacy" />
           <span className="font-mono text-[0.62rem] uppercase tracking-[0.35em] text-muted-foreground">
